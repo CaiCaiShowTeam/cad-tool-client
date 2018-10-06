@@ -1,0 +1,26 @@
+<temporary xmlns="">
+	<Preference>
+		<Caxa>
+			<Cache>/Users/Jeason/Downloads/b90fe5bf09e448898b0667415afad6eb/b90fe5bf09e448898b0667415afad6eb
+			</Cache>
+			<Location>/Users/Jeason/Downloads/0000000021.properties</Location>
+		</Caxa>
+		<Container>
+			<Folder>
+				<Name>Design</Name>
+				<Oid>wt.folder.SubFolder:63821</Oid>
+				<Selected>false</Selected>
+			</Folder>
+			<Product>
+				<Name>GOLF_CART</Name>
+				<Oid>wt.pdmlink.PDMLinkProduct:63528</Oid>
+				<Selected>false</Selected>
+			</Product>
+		</Container>
+		<Server>http://windchill.domain.com/Windchill/</Server>
+	</Preference>
+	<RememberMe>true</RememberMe>
+	<UserName>demo</UserName>
+	<UserPasswd>demo</UserPasswd>
+	<Server>http://windchill.domain.com/Windchill/</Server>
+</temporary>

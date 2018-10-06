@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<plminfo GYGCMC="成量机加工艺规程" cpdh="产品代号" cpmc="产品名称" ljdh="零部件代号"
+	ljmc="零部件名称" clph="材料牌号" clcc="材料尺寸" gy="共页" kpmc="卡片名称"
+	jdecode="JDE项目号" gylxlx="工艺路线类型" fcmc="分厂名称">
+	<partlist>
+		<partinfo id="1" SZKITL="00000022项目号">
+			<line id="1" SZKITL="项目号" SZOPSQ="工序号" SZDSC1="工序名称"
+				SZTRT="工艺路线类型" jgdw="加工单位" SZMMCU="加工单位代号" SZWMCU="加工单位代号"
+				SZMCU="工作中心" SZTIMB="工时基准" SZRUNM="运行机器" SZRUNL="运行人工" SZSETL="准备人工"
+				SZVEND="主要供应商" SZDL12="工序所在页码" SZDL01="长度L" SZDL02="直径d"
+				SZDL03="坯料尺寸 φ" SZDL04="坯料尺寸 L" SZDL05="锻件尺寸D" SZDL06="锻件尺寸d"
+				SZDL07="锻件尺寸L" SZDL08="锻件尺寸l" SZDL09="装量" SZDL10="加热时间min"
+				SZDL11="加热时间Hz" />
+			<line id="2" SZKITL="项目号2" SZOPSQ="工序号2" />
+			<line id="3" SZKITL="项目号3" SZOPSQ="工序号3" />
+		</partinfo>
+		<partinfo id="2" SZKITL="00000023项目号">
+			<line id="2" SZKITL="项目号" SZOPSQ="工序号" SZDSC1="工序名称"
+				SZTRT="工艺路线类型" jgdw="加工单位" SZMMCU="加工单位代号" SZWMCU="加工单位代号"
+				SZMCU="工作中心" SZTIMB="工时基准" SZRUNM="运行机器" SZRUNL="运行人工" SZSETL="准备人工"
+				SZVEND="主要供应商" SZDL12="工序所在页码" SZDL01="长度L" SZDL02="直径d"
+				SZDL03="坯料尺寸 φ" SZDL04="坯料尺寸 L" SZDL05="锻件尺寸D" SZDL06="锻件尺寸d"
+				SZDL07="锻件尺寸L" SZDL08="锻件尺寸l" SZDL09="装量" SZDL10="加热时间min"
+				SZDL11="加热时间Hz" />
+			<line id="2" SZKITL="项目号2" SZOPSQ="工序号2" />
+			<line id="3" SZKITL="项目号3" SZOPSQ="工序号3" />
+		</partinfo>
+		<partinfo id="3" SZKITL="00000024项目号">
+			<line id="3" SZKITL="项目号" SZOPSQ="工序号" SZDSC1="工序名称"
+				SZTRT="工艺路线类型" jgdw="加工单位" SZMMCU="加工单位代号" SZWMCU="加工单位代号"
+				SZMCU="工作中心" SZTIMB="工时基准" SZRUNM="运行机器" SZRUNL="运行人工" SZSETL="准备人工"
+				SZVEND="主要供应商" SZDL12="工序所在页码" SZDL01="长度L" SZDL02="直径d"
+				SZDL03="坯料尺寸 φ" SZDL04="坯料尺寸 L" SZDL05="锻件尺寸D" SZDL06="锻件尺寸d"
+				SZDL07="锻件尺寸L" SZDL08="锻件尺寸l" SZDL09="装量" SZDL10="加热时间min"
+				SZDL11="加热时间Hz" />
+			<line id="2" SZKITL="项目号2" SZOPSQ="工序号2" />
+			<line id="3" SZKITL="项目号3" SZOPSQ="工序号3" />
+		</partinfo>
+	</partlist>
+	<attachment>
+		<absolutePath>C://1.cxp</absolutePath>
+	</attachment>
+	<attachment>
+		<absolutePath>C://2.pdf</absolutePath>
+	</attachment>
+</plminfo>
