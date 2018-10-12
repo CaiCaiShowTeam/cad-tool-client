@@ -52,7 +52,7 @@ public class ValidateUtils {
 			ClientAssert.hasText(cad.getDetailNum(), CustomPrompt.DETAIL_NUMBER_NULL);
 
 			ClientAssert.isTrue(validateDetailNum(cad.getDetailNum()), CustomPrompt.ERROR_DETAIL_NUMBER_FORMAT);
-			if (cad.getDetailNum().equals(cad.getNumber())) {
+			if (!cad.getDetailNum().equals(cad.getNumber())) {
 				ClientAssert.isTrue(!StringUtils.hasText(cad.getJdeNum()), CustomPrompt.JDE_NUMBER_NOT_NULL);
 			} else {
 				ClientAssert.isTrue(StringUtils.hasText(cad.getJdeNum()), CustomPrompt.JDE_NUMBER_NULL);
