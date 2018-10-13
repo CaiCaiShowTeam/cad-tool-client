@@ -10,6 +10,8 @@ import javax.swing.border.TitledBorder;
 
 import org.apache.log4j.Logger;
 
+import com.bplead.cad.bean.annotation.DisplayIgnore;
+
 import priv.lee.cad.layout.DefaultGroupLayout;
 import priv.lee.cad.ui.AbstractPanel;
 import priv.lee.cad.ui.PromptTextField;
@@ -39,6 +41,11 @@ public class BasicAttributePanel extends AbstractPanel {
 		Field[] fields = serializable.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);
+			DisplayIgnore annotation = field.getAnnotation(DisplayIgnore.class);
+			if (annotation != null) {
+				continue;
+			}
+
 			value = "";
 			try {
 				if (this.serializable != null) {
