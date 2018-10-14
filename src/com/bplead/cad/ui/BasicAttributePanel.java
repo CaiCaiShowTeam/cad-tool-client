@@ -15,6 +15,7 @@ import com.bplead.cad.bean.annotation.DisplayIgnore;
 import priv.lee.cad.layout.DefaultGroupLayout;
 import priv.lee.cad.ui.AbstractPanel;
 import priv.lee.cad.ui.PromptTextField;
+import priv.lee.cad.util.ObjectUtils;
 
 public class BasicAttributePanel extends AbstractPanel {
 
@@ -42,13 +43,13 @@ public class BasicAttributePanel extends AbstractPanel {
 		for (Field field : fields) {
 			field.setAccessible(true);
 			DisplayIgnore annotation = field.getAnnotation(DisplayIgnore.class);
-			if (annotation != null) {
+			if (!ObjectUtils.isEmpty(annotation)) {
 				continue;
 			}
 
 			value = "";
 			try {
-				if (this.serializable != null) {
+				if (!ObjectUtils.isEmpty(this.serializable)) {
 					Object object = field.get(serializable);
 					if (!(object instanceof String)) {
 						continue;

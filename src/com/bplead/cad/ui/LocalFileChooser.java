@@ -6,6 +6,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 
 import priv.lee.cad.ui.PromptTextField;
+import priv.lee.cad.util.ObjectUtils;
 
 public class LocalFileChooser extends JFileChooser {
 
@@ -17,7 +18,7 @@ public class LocalFileChooser extends JFileChooser {
 		showDialog(new JLabel(), CHOOSE);
 
 		File selectedFile = getSelectedFile();
-		if (selectedFile != null) {
+		if (!ObjectUtils.isEmpty(selectedFile)) {
 			text.getText().setText(selectedFile.getAbsolutePath());
 		}
 	}

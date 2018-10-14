@@ -13,8 +13,27 @@ import priv.lee.cad.ui.AbstractDialog;
 
 public class PopProgress extends AbstractDialog implements ActionListener {
 
+	public static class PromptProgress {
+		private int progress;
+		private String prompt;
+
+		public PromptProgress(String prompt, int progress) {
+			this.prompt = prompt;
+			this.progress = progress;
+		}
+
+		public int getProgress() {
+			return progress;
+		}
+
+		public String getPrompt() {
+			return prompt;
+		}
+	}
+
 	private static final long serialVersionUID = 3270445558206143668L;
 	private JProgressBar progress = new JProgressBar(0, 100);
+
 	private JLabel prompt = new JLabel();
 
 	public PopProgress(Callback callback) {
@@ -63,24 +82,6 @@ public class PopProgress extends AbstractDialog implements ActionListener {
 			dispose();
 		} else {
 			validate();
-		}
-	}
-
-	public static class PromptProgress {
-		private int progress;
-		private String prompt;
-
-		public PromptProgress(String prompt, int progress) {
-			this.prompt = prompt;
-			this.progress = progress;
-		}
-
-		public int getProgress() {
-			return progress;
-		}
-
-		public String getPrompt() {
-			return prompt;
 		}
 	}
 }

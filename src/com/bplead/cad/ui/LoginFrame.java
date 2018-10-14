@@ -9,6 +9,7 @@ import com.bplead.cad.util.ClientUtils;
 import priv.lee.cad.model.ServerClientTemporary;
 import priv.lee.cad.ui.AbstractLoginFrame;
 import priv.lee.cad.util.ClientAssert;
+import priv.lee.cad.util.ObjectUtils;
 import priv.lee.cad.util.XmlUtils;
 
 public class LoginFrame extends AbstractLoginFrame {
@@ -43,7 +44,7 @@ public class LoginFrame extends AbstractLoginFrame {
 		ClientAssert.hasText(server.pwd.getTextContent(), CustomPrompt.PWD_NULL);
 
 		Temporary temporary = XmlUtils.read(Temporary.class);
-		if (temporary == null || !server.user.getTextContent().equals(temporary.getUserName())) {
+		if (ObjectUtils.isEmpty(temporary) || !server.user.getTextContent().equals(temporary.getUserName())) {
 			temporary = new Temporary(server.host.getTextContent(), server.user.getTextContent(),
 					server.pwd.getTextContent(), server.remeberme.isSelected());
 		} else {

@@ -17,6 +17,8 @@ import priv.lee.cad.model.ResourceMap;
 import priv.lee.cad.model.ResourceMapper;
 import priv.lee.cad.model.impl.DefaultResourceMap;
 import priv.lee.cad.util.ClientAssert;
+import priv.lee.cad.util.CollectionUtils;
+import priv.lee.cad.util.ObjectUtils;
 import priv.lee.cad.util.StringUtils;
 import priv.lee.cad.util.XmlUtils;
 
@@ -42,7 +44,7 @@ public class PdmLinkProductTable extends JTable implements ResourceMapper, Mouse
 
 	@SuppressWarnings("unchecked")
 	private <T> T getCellContent(SimplePdmLinkProduct product, String name, Class<T> clatt) {
-		if (product == null || StringUtils.isEmpty(name) || clatt == null) {
+		if (ObjectUtils.isEmpty(product) || StringUtils.isEmpty(name) || ObjectUtils.isEmpty(clatt)) {
 			return null;
 		}
 
@@ -101,7 +103,7 @@ public class PdmLinkProductTable extends JTable implements ResourceMapper, Mouse
 	}
 
 	public SimplePdmLinkProduct getRowData(int row) {
-		if (products == null) {
+		if (CollectionUtils.isEmpty(products)) {
 			return null;
 		}
 		ClientAssert.isTrue(row < products.size(), "Row out of bounds:" + row);
@@ -120,7 +122,7 @@ public class PdmLinkProductTable extends JTable implements ResourceMapper, Mouse
 	}
 
 	private void initTable() {
-		if (products == null) {
+		if (CollectionUtils.isEmpty(products)) {
 			return;
 		}
 
@@ -137,7 +139,7 @@ public class PdmLinkProductTable extends JTable implements ResourceMapper, Mouse
 				try {
 					Object content = getCellContent(products.get(row), getCellContentName(column),
 							getCellContentType(column));
-					model.setValueAt(content == null ? "" : content, row, column);
+					model.setValueAt(ObjectUtils.isEmpty(content) ? "" : content, row, column);
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}

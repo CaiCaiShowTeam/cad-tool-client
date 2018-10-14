@@ -15,6 +15,7 @@ import priv.lee.cad.model.StyleToolkit;
 import priv.lee.cad.model.TieContainer;
 import priv.lee.cad.model.impl.DefaultStyleToolkit;
 import priv.lee.cad.model.impl.GlobalResourceMap;
+import priv.lee.cad.util.CollectionUtils;
 
 public class TabAttributePanel extends JTabbedPane implements ResourceMapper, TieContainer {
 
@@ -59,7 +60,7 @@ public class TabAttributePanel extends JTabbedPane implements ResourceMapper, Ti
 
 	public void initComponents() {
 		setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
-		
+
 		doSelfAdaption();
 
 		initialize();
@@ -69,7 +70,7 @@ public class TabAttributePanel extends JTabbedPane implements ResourceMapper, Ti
 
 	@Override
 	public void initialize() {
-		if (mpmParts == null || mpmParts.isEmpty()) {
+		if (CollectionUtils.isEmpty(mpmParts)) {
 			return;
 		}
 

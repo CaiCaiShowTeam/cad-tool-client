@@ -27,78 +27,11 @@ import priv.lee.cad.ui.Option;
 import priv.lee.cad.ui.OptionPanel;
 import priv.lee.cad.ui.PromptTextField;
 import priv.lee.cad.util.ClientAssert;
+import priv.lee.cad.util.ObjectUtils;
 import priv.lee.cad.util.StringUtils;
 import priv.lee.cad.util.XmlUtils;
 
 public class PreferencesDialog extends AbstractDialog {
-
-	private static final long serialVersionUID = -2875157877197653599L;
-	private final Logger logger = Logger.getLogger(PreferencesDialog.class);
-	private Preference preference = ClientUtils.temprary.getPreference();
-	private PreferencesPanel preferencePanel;
-
-	public PreferencesDialog(Callback container) {
-		super(PreferencesDialog.class, container);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// ~ do confirm
-		if (preference == null) {
-			preference = new Preference();
-		}
-
-		String url = preferencePanel.url.getText().getText();
-		ValidateUtils.validateUrl(url);
-
-		String caxaCache = preferencePanel.cache.getText().getText();
-		ValidateUtils.validateCaxaCache(caxaCache);
-
-		String caxaExe = preferencePanel.exe.getText().getText();
-		ValidateUtils.validateCaxaExe(caxaExe);
-
-		SimplePdmLinkProduct product = preferencePanel.product;
-		ValidateUtils.validateProduct(product);
-
-		SimpleFolder folder = preferencePanel.folder;
-		ValidateUtils.validateFolder(folder);
-
-		logger.info("begin to write client temporay...");
-		preference.setCaxa(new CaxaTemporary(caxaCache, caxaExe));
-		preference.setContainer(new Container(product, folder));
-
-		XmlUtils.store(ClientUtils.temprary);
-
-		super.actionPerformed(e);
-	}
-
-	@Override
-	public double getHorizontalProportion() {
-		return 0.4d;
-	}
-
-	@Override
-	public double getVerticalProportion() {
-		return 0.35d;
-	}
-
-	@Override
-	public void initialize() {
-		logger.info("initialize preferences content...");
-		preferencePanel = new PreferencesPanel();
-		add(preferencePanel);
-
-		logger.info("initialize option content...");
-		Option confirm = new Option(Option.CONFIRM_BUTTON, null, this);
-		add(new OptionPanel(Arrays.asList(confirm, Option.newCancelOption(this))));
-
-		logger.info("initialize completed...");
-	}
-
-	@Override
-	public Object setCallbackObject() {
-		return ClientUtils.temprary;
-	}
 
 	private class FindCaxaCacheActionListener implements ActionListener {
 
@@ -262,11 +195,11 @@ public class PreferencesDialog extends AbstractDialog {
 		}
 
 		private boolean isPreferenceCaxaNull() {
-			return preference == null || preference.getCaxa() == null;
+			return ObjectUtils.isEmpty(preference) || ObjectUtils.isEmpty(preference.getCaxa());
 		}
 
 		private boolean isPreferenceContainerNull() {
-			return preference == null || preference.getContainer() == null;
+			return ObjectUtils.isEmpty(preference) || ObjectUtils.isEmpty(preference.getContainer());
 		}
 
 		public void setFolder(SimpleFolder folder) {
@@ -276,5 +209,76 @@ public class PreferencesDialog extends AbstractDialog {
 		public void setProduct(SimplePdmLinkProduct product) {
 			this.product = product;
 		}
+	}
+
+	private static final long serialVersionUID = -2875157877197653599L;
+
+	private final Logger logger = Logger.getLogger(PreferencesDialog.class);
+
+	private Preference preference = ClientUtils.temprary.getPreference();
+
+	private PreferencesPanel preferencePanel;
+
+	public PreferencesDialog(Callback container) {
+		super(PreferencesDialog.class, container);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// ~ do confirm
+		if (ObjectUtils.isEmpty(preference)) {
+			preference = new Preference();
+		}
+
+		String url = preferencePanel.url.getText().getText();
+		ValidateUtils.validateUrl(url);
+
+		String caxaCache = preferencePanel.cache.getText().getText();
+		ValidateUtils.validateCaxaCache(caxaCache);
+
+		String caxaExe = preferencePanel.exe.getText().getText();
+		ValidateUtils.validateCaxaExe(caxaExe);
+
+		SimplePdmLinkProduct product = preferencePanel.product;
+		ValidateUtils.validateProduct(product);
+
+		SimpleFolder folder = preferencePanel.folder;
+		ValidateUtils.validateFolder(folder);
+
+		logger.info("begin to write client temporay...");
+		preference.setCaxa(new CaxaTemporary(caxaCache, caxaExe));
+		preference.setContainer(new Container(product, folder));
+
+		XmlUtils.store(ClientUtils.temprary);
+
+		super.actionPerformed(e);
+	}
+
+	@Override
+	public double getHorizontalProportion() {
+		return 0.4d;
+	}
+
+	@Override
+	public double getVerticalProportion() {
+		return 0.35d;
+	}
+
+	@Override
+	public void initialize() {
+		logger.info("initialize preferences content...");
+		preferencePanel = new PreferencesPanel();
+		add(preferencePanel);
+
+		logger.info("initialize option content...");
+		Option confirm = new Option(Option.CONFIRM_BUTTON, null, this);
+		add(new OptionPanel(Arrays.asList(confirm, Option.newCancelOption(this))));
+
+		logger.info("initialize completed...");
+	}
+
+	@Override
+	public Object setCallbackObject() {
+		return ClientUtils.temprary;
 	}
 }

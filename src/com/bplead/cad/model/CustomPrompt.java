@@ -35,7 +35,7 @@ public class CustomPrompt extends StandardPrompt {
 	public static final String LOCAL_REPOSITORY_NULL = "localRepositoryNull";
 
 	public static final String MISSING_CXP_FILE = "missCxpFile";
-	
+
 	public static final String MISSING_EXB_FILE = "missExbFile";
 
 	public static final String ONLY_ONE_PROPERTIES = "onlyOneProperties";

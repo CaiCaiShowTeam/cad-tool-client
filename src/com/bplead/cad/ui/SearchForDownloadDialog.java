@@ -35,72 +35,6 @@ import priv.lee.cad.util.ClientAssert;
 
 public class SearchForDownloadDialog extends AbstractDialog implements ActionListener {
 
-	private static LayoutManager layout = new FlowLayout(FlowLayout.LEFT);
-	private static final Logger logger = Logger.getLogger(SearchForDownloadDialog.class);
-	private static final long serialVersionUID = 1336292047030719519L;
-	private DownloadSettingPanel downloadSettingPanel;
-	private SearchConditionsPanel searchConditionPanel;
-	private SearchResultPanel searchResultPanel;
-
-	public SearchForDownloadDialog(Callback container) {
-		super(SearchForDownloadDialog.class, container);
-	}
-
-	private void download(File serverFile, File localFile) {
-		FTPUtils utils = FTPUtils.newInstance();
-		utils.download(serverFile, localFile);
-		utils.delete(serverFile);
-	}
-
-	@Override
-	public double getHorizontalProportion() {
-		return 0.5;
-	}
-
-	@Override
-	public double getVerticalProportion() {
-		return 0.5;
-	}
-
-	@Override
-	public void initialize() {
-		logger.info("initialize " + getClass() + " layout...");
-		setLayout(layout);
-
-		logger.info("initialize " + getClass() + " content...");
-		searchConditionPanel = new SearchConditionsPanel();
-		add(searchConditionPanel);
-
-		logger.info("initialize " + getClass() + " content...");
-		searchResultPanel = new SearchResultPanel();
-		add(searchResultPanel);
-
-		logger.info("initialize " + getClass() + " content...");
-		downloadSettingPanel = new DownloadSettingPanel();
-		add(downloadSettingPanel);
-
-		logger.info("initialize " + getClass() + "  completed...");
-	}
-
-	@Override
-	public Object setCallbackObject() {
-		String localPath = downloadSettingPanel.setting.getText().getText();
-		ClientAssert.hasText(localPath, CustomPrompt.LOCAL_REPOSITORY_NULL);
-
-		List<SimpleDocument> documents = searchResultPanel.table.getSelectedDocuments();
-		ClientAssert.notEmpty(documents, CustomPrompt.SELECTED_ITEM_NULL);
-
-		DataContent content = ClientUtils.checkoutAndDownload(documents);
-		ClientAssert.notNull(content, CustomPrompt.FAILD_OPTION);
-
-		logger.info("download " + getClass() + "  completed...");
-		File localFile = new File(localPath + File.separator + content.getServerFile().getName());
-		download(content.getServerFile(), localFile);
-
-		logger.info("unzip file...");
-		return ClientUtils.unzip(localFile);
-	}
-
 	class DownloadSettingPanel extends AbstractPanel implements ActionListener {
 
 		private static final long serialVersionUID = -6481481565984135229L;
@@ -235,5 +169,74 @@ public class SearchForDownloadDialog extends AbstractDialog implements ActionLis
 		public void initResultTable(List<SimpleDocument> documents) {
 			table.refresh(documents);
 		}
+	}
+
+	private static LayoutManager layout = new FlowLayout(FlowLayout.LEFT);
+	private static final Logger logger = Logger.getLogger(SearchForDownloadDialog.class);
+	private static final long serialVersionUID = 1336292047030719519L;
+
+	private DownloadSettingPanel downloadSettingPanel;
+
+	private SearchConditionsPanel searchConditionPanel;
+
+	private SearchResultPanel searchResultPanel;
+
+	public SearchForDownloadDialog(Callback container) {
+		super(SearchForDownloadDialog.class, container);
+	}
+
+	private void download(File serverFile, File localFile) {
+		FTPUtils utils = FTPUtils.newInstance();
+		utils.download(serverFile, localFile);
+		utils.delete(serverFile);
+	}
+
+	@Override
+	public double getHorizontalProportion() {
+		return 0.5;
+	}
+
+	@Override
+	public double getVerticalProportion() {
+		return 0.5;
+	}
+
+	@Override
+	public void initialize() {
+		logger.info("initialize " + getClass() + " layout...");
+		setLayout(layout);
+
+		logger.info("initialize " + getClass() + " content...");
+		searchConditionPanel = new SearchConditionsPanel();
+		add(searchConditionPanel);
+
+		logger.info("initialize " + getClass() + " content...");
+		searchResultPanel = new SearchResultPanel();
+		add(searchResultPanel);
+
+		logger.info("initialize " + getClass() + " content...");
+		downloadSettingPanel = new DownloadSettingPanel();
+		add(downloadSettingPanel);
+
+		logger.info("initialize " + getClass() + "  completed...");
+	}
+
+	@Override
+	public Object setCallbackObject() {
+		String localPath = downloadSettingPanel.setting.getText().getText();
+		ClientAssert.hasText(localPath, CustomPrompt.LOCAL_REPOSITORY_NULL);
+
+		List<SimpleDocument> documents = searchResultPanel.table.getSelectedDocuments();
+		ClientAssert.notEmpty(documents, CustomPrompt.SELECTED_ITEM_NULL);
+
+		DataContent content = ClientUtils.checkoutAndDownload(documents);
+		ClientAssert.notNull(content, CustomPrompt.FAILD_OPTION);
+
+		logger.info("download " + getClass() + "  completed...");
+		File localFile = new File(localPath + File.separator + content.getServerFile().getName());
+		download(content.getServerFile(), localFile);
+
+		logger.info("unzip file...");
+		return ClientUtils.unzip(localFile);
 	}
 }

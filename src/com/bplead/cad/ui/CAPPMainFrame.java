@@ -22,91 +22,11 @@ import com.bplead.cad.util.ValidateUtils;
 import priv.lee.cad.model.Callback;
 import priv.lee.cad.ui.AbstractFrame;
 import priv.lee.cad.util.ClientAssert;
+import priv.lee.cad.util.ObjectUtils;
 import priv.lee.cad.util.PropertiesUtils;
 import priv.lee.cad.util.XmlUtils;
 
 public class CAPPMainFrame extends AbstractFrame implements Callback {
-
-	private static Logger logger = Logger.getLogger(CADMainFrame.class);
-	private static final long serialVersionUID = -583597043543602853L;
-	private BasicAttributePanel attributePanel;
-	private CAPP capp;
-	private final String CAPP_REPOSITORY = "capp.xml.repository";
-	private ContainerPanel containerPanel;
-	private TabAttributePanel tabAttributePanel;
-	private CustomStyleToolkit toolkit = new CustomStyleToolkit(this);
-
-	public CAPPMainFrame() {
-		super(CAPPMainFrame.class);
-		setToolkit(toolkit);
-	}
-
-	@Override
-	public void call(Object object) {
-		reload();
-	}
-
-	@Override
-	public double getHorizontalProportion() {
-		return 0.6d;
-	}
-
-	private File getRepository() {
-		if (ClientUtils.temprary == null || ClientUtils.temprary.getPreference() == null
-				|| ClientUtils.temprary.getPreference().getCaxa() == null
-				|| !new File(ClientUtils.temprary.getPreference().getCaxa().getCache()).exists()) {
-			return null;
-		}
-		return new File(ClientUtils.temprary.getPreference().getCaxa().getCache()
-				+ PropertiesUtils.readProperty(CAPP_REPOSITORY));
-	}
-
-	@Override
-	public double getVerticalProportion() {
-		return 0.99d;
-	}
-
-	private void initCAPP() {
-		if (getRepository() == null) {
-			toolkit.startPreferencesDialog(this);
-			dispose();
-		} else {
-			File xml = getRepository();
-			ClientAssert.notNull(xml, "CAD tool initialize failed.Please check file /CAXA_CACHE"
-					+ PropertiesUtils.readProperty(CAPP_REPOSITORY) + " is exsits");
-			this.capp = XmlUtils.read(xml, CAPP.class);
-			logger.debug("capp:" + capp);
-
-			// add configuration file of CAXA(*.xml) to attachment list
-			capp.getAttachments().add(new Attachment(getRepository(), false));
-		}
-	}
-
-	@Override
-	public void initialize() {
-		logger.info("initialize " + getClass() + " CAPP...");
-		initCAPP();
-
-		if (capp == null) {
-			return;
-		}
-
-		logger.info("initialize " + getClass() + " menu bar...");
-		setJMenuBar(toolkit.getStandardMenuBar(new CheckinActionListenner(), new CheckoutActionListenner()));
-
-		logger.info("initialize " + getClass() + " container panel...");
-		containerPanel = new ContainerPanel();
-		getContentPane().add(containerPanel);
-
-		logger.info("initialize " + getClass() + " basic attribute panel...");
-		attributePanel = new BasicAttributePanel(capp);
-		attributePanel.setLabelProportion(0.1d);
-		getContentPane().add(attributePanel);
-
-		logger.info("initialize " + getClass() + " tab attribute panel...");
-		tabAttributePanel = new TabAttributePanel(capp.getMpmParts());
-		getContentPane().add(tabAttributePanel);
-	}
 
 	public class CheckinActionListenner implements ActionListener {
 
@@ -209,5 +129,89 @@ public class CAPPMainFrame extends AbstractFrame implements Callback {
 		public void call(Object object) {
 			ClientUtils.open((File) object);
 		}
+	}
+
+	private static Logger logger = Logger.getLogger(CADMainFrame.class);
+	private static final long serialVersionUID = -583597043543602853L;
+	private BasicAttributePanel attributePanel;
+	private CAPP capp;
+	private final String CAPP_REPOSITORY = "capp.xml.repository";
+
+	private ContainerPanel containerPanel;
+
+	private TabAttributePanel tabAttributePanel;
+
+	private CustomStyleToolkit toolkit = new CustomStyleToolkit(this);
+
+	public CAPPMainFrame() {
+		super(CAPPMainFrame.class);
+		setToolkit(toolkit);
+	}
+
+	@Override
+	public void call(Object object) {
+		reload();
+	}
+
+	@Override
+	public double getHorizontalProportion() {
+		return 0.6d;
+	}
+
+	private File getRepository() {
+		if (ObjectUtils.isEmpty(ClientUtils.temprary) || ObjectUtils.isEmpty(ClientUtils.temprary.getPreference())
+				|| ObjectUtils.isEmpty(ClientUtils.temprary.getPreference().getCaxa())
+				|| !new File(ClientUtils.temprary.getPreference().getCaxa().getCache()).exists()) {
+			return null;
+		}
+		return new File(ClientUtils.temprary.getPreference().getCaxa().getCache()
+				+ PropertiesUtils.readProperty(CAPP_REPOSITORY));
+	}
+
+	@Override
+	public double getVerticalProportion() {
+		return 0.99d;
+	}
+
+	private void initCAPP() {
+		if (ObjectUtils.isEmpty(getRepository())) {
+			toolkit.startPreferencesDialog(this);
+			dispose();
+		} else {
+			File xml = getRepository();
+			ClientAssert.notNull(xml, "CAD tool initialize failed.Please check file /CAXA_CACHE"
+					+ PropertiesUtils.readProperty(CAPP_REPOSITORY) + " is exsits");
+			this.capp = XmlUtils.read(xml, CAPP.class);
+			logger.debug("capp:" + capp);
+
+			// add configuration file of CAXA(*.xml) to attachment list
+			capp.getAttachments().add(new Attachment(getRepository(), false));
+		}
+	}
+
+	@Override
+	public void initialize() {
+		logger.info("initialize " + getClass() + " CAPP...");
+		initCAPP();
+
+		if (ObjectUtils.isEmpty(capp)) {
+			return;
+		}
+
+		logger.info("initialize " + getClass() + " menu bar...");
+		setJMenuBar(toolkit.getStandardMenuBar(new CheckinActionListenner(), new CheckoutActionListenner()));
+
+		logger.info("initialize " + getClass() + " container panel...");
+		containerPanel = new ContainerPanel();
+		getContentPane().add(containerPanel);
+
+		logger.info("initialize " + getClass() + " basic attribute panel...");
+		attributePanel = new BasicAttributePanel(capp);
+		attributePanel.setLabelProportion(0.1d);
+		getContentPane().add(attributePanel);
+
+		logger.info("initialize " + getClass() + " tab attribute panel...");
+		tabAttributePanel = new TabAttributePanel(capp.getMpmParts());
+		getContentPane().add(tabAttributePanel);
 	}
 }

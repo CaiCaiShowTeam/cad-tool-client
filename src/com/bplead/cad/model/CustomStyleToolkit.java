@@ -15,7 +15,27 @@ import priv.lee.cad.model.impl.DefaultStyleToolkit;
 
 public class CustomStyleToolkit extends DefaultStyleToolkit {
 
+	public class PrefencesActionListener implements ActionListener, Callback {
+
+		private Callback callback;
+
+		public PrefencesActionListener(Callback callback) {
+			this.callback = callback;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			startPreferencesDialog(callback);
+		}
+
+		@Override
+		public void call(Object object) {
+
+		}
+	}
+
 	private static final String PREFERENCES_MENU_ITEM = "menu.file.item2";
+
 	private Callback callback;
 
 	public CustomStyleToolkit(Callback callback) {
@@ -42,24 +62,5 @@ public class CustomStyleToolkit extends DefaultStyleToolkit {
 				dialog.activate();
 			}
 		});
-	}
-
-	public class PrefencesActionListener implements ActionListener, Callback {
-
-		private Callback callback;
-
-		public PrefencesActionListener(Callback callback) {
-			this.callback = callback;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			startPreferencesDialog(callback);
-		}
-
-		@Override
-		public void call(Object object) {
-
-		}
 	}
 }

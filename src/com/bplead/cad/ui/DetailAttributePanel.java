@@ -17,6 +17,8 @@ import com.bplead.cad.bean.io.DetailModel;
 
 import priv.lee.cad.ui.AbstractPanel;
 import priv.lee.cad.util.ClientAssert;
+import priv.lee.cad.util.CollectionUtils;
+import priv.lee.cad.util.ObjectUtils;
 
 public class DetailAttributePanel extends AbstractPanel {
 
@@ -37,7 +39,7 @@ public class DetailAttributePanel extends AbstractPanel {
 	}
 
 	private Class<? extends Serializable> getActualType(List<? extends Serializable> detail) {
-		if (detail == null || detail.isEmpty()) {
+		if (CollectionUtils.isEmpty(detail)) {
 			return null;
 		}
 		return detail.get(0).getClass();
@@ -91,20 +93,20 @@ public class DetailAttributePanel extends AbstractPanel {
 
 	private void initTableData(List<? extends Serializable> detail) {
 		Class<? extends Serializable> cls = getActualType(detail);
-		if (cls == null) {
+		if (ObjectUtils.isEmpty(cls)) {
 			return;
 		}
 
 		Field[] fields = cls.getDeclaredFields();
 		names = new String[fields.length];
-		datas = new String[detail == null || detail.isEmpty() ? 0 : detail.size()][names.length];
+		datas = new String[CollectionUtils.isEmpty(detail) ? 0 : detail.size()][names.length];
 		for (int i = 0; i < fields.length; i++) {
 			Field field = fields[i];
 			field.setAccessible(true);
 			String name = getResourceMap().getString(field.getName());
 			ClientAssert.hasText(name, "Table column name[" + field.getName() + "] must not be null");
 			names[i] = name;
-			if (detail == null || detail.isEmpty()) {
+			if (CollectionUtils.isEmpty(detail)) {
 				continue;
 			}
 			for (int j = 0; j < detail.size(); j++) {
@@ -116,7 +118,7 @@ public class DetailAttributePanel extends AbstractPanel {
 					e.printStackTrace();
 				}
 				logger.debug(name + "=" + value);
-				datas[j][i] = String.valueOf(value == null ? "" : value);
+				datas[j][i] = String.valueOf(ObjectUtils.isEmpty(value) ? "" : value);
 			}
 		}
 	}

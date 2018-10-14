@@ -17,6 +17,8 @@ import priv.lee.cad.model.ResourceMap;
 import priv.lee.cad.model.ResourceMapper;
 import priv.lee.cad.model.impl.DefaultResourceMap;
 import priv.lee.cad.util.ClientAssert;
+import priv.lee.cad.util.CollectionUtils;
+import priv.lee.cad.util.ObjectUtils;
 import priv.lee.cad.util.StringUtils;
 import priv.lee.cad.util.XmlUtils;
 
@@ -49,7 +51,7 @@ public class SearchResultTable extends JTable implements ResourceMapper, MouseLi
 
 	@SuppressWarnings("unchecked")
 	private <T> T getCellContent(SimpleDocument product, String name, Class<T> clatt) {
-		if (product == null || StringUtils.isEmpty(name) || clatt == null) {
+		if (ObjectUtils.isEmpty(product) || StringUtils.isEmpty(name) || ObjectUtils.isEmpty(clatt)) {
 			return null;
 		}
 
@@ -108,7 +110,7 @@ public class SearchResultTable extends JTable implements ResourceMapper, MouseLi
 	}
 
 	public SimpleDocument getRowData(int row) {
-		if (documents == null) {
+		if (CollectionUtils.isEmpty(documents)) {
 			return null;
 		}
 		ClientAssert.isTrue(row < documents.size(), "Row out of bounds:" + row);
@@ -193,7 +195,7 @@ public class SearchResultTable extends JTable implements ResourceMapper, MouseLi
 	}
 
 	private void setRows(DefaultTableModel model, int column) {
-		if (documents == null || documents.isEmpty()) {
+		if (CollectionUtils.isEmpty(documents)) {
 			clear();
 			return;
 		}
@@ -206,7 +208,7 @@ public class SearchResultTable extends JTable implements ResourceMapper, MouseLi
 			try {
 				Object content = getCellContent(documents.get(row), getCellContentName(column),
 						getCellContentType(column));
-				model.setValueAt(content == null ? "" : content, row, column);
+				model.setValueAt(ObjectUtils.isEmpty(content) ? "" : content, row, column);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}

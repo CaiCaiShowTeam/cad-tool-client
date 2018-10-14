@@ -17,8 +17,24 @@ import priv.lee.cad.util.ClientAssert;
 
 public class FolderTree extends JTree {
 
+	public class FolderNode extends DefaultMutableTreeNode {
+
+		private static final long serialVersionUID = -8615146478575724605L;
+		private SimpleFolder folder;
+
+		public FolderNode(SimpleFolder folder) {
+			super(folder.getName());
+			this.folder = folder;
+		}
+
+		public SimpleFolder getFolder() {
+			return folder;
+		}
+	}
+
 	private static final Logger logger = Logger.getLogger(FolderTree.class);
 	private static final long serialVersionUID = -8568945020359297230L;
+
 	private SimpleFolder rootFolder;
 
 	public FolderTree(SimplePdmLinkProduct product) {
@@ -42,20 +58,5 @@ public class FolderTree extends JTree {
 			node.add(toFolderNode(child));
 		}
 		return node;
-	}
-
-	public class FolderNode extends DefaultMutableTreeNode {
-
-		private static final long serialVersionUID = -8615146478575724605L;
-		private SimpleFolder folder;
-
-		public FolderNode(SimpleFolder folder) {
-			super(folder.getName());
-			this.folder = folder;
-		}
-
-		public SimpleFolder getFolder() {
-			return folder;
-		}
 	}
 }

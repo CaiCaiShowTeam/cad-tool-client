@@ -26,10 +26,35 @@ import com.bplead.cad.model.CustomPrompt;
 
 import priv.lee.cad.util.ClientAssert;
 import priv.lee.cad.util.ClientInstanceUtils;
+import priv.lee.cad.util.ObjectUtils;
 import priv.lee.cad.util.PropertiesUtils;
 import priv.lee.cad.util.StringUtils;
 
 public class ClientUtils extends ClientInstanceUtils {
+
+	public static class StartArguments {
+
+		public static final String CAD = "cad";
+		public static final String CAPP = "capp";
+		public static final String DOWNLOAD = "download";
+		private String type;
+
+		public StartArguments() {
+
+		}
+
+		public StartArguments(String type) {
+			this.type = type;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+	}
 
 	public static StartArguments args = new StartArguments();
 	private static final int BUFFER_SIZE = 2 * 1024;
@@ -42,6 +67,7 @@ public class ClientUtils extends ClientInstanceUtils {
 	private static final Logger logger = Logger.getLogger(ClientUtils.class);
 	private static final String OID = "oid";
 	public static Temporary temprary = new Temporary();
+
 	private static final String ZIP = ".zip";
 
 	public static List<Attachment> buildAttachments(AttachmentModel model, String primarySuffix) {
@@ -86,7 +112,7 @@ public class ClientUtils extends ClientInstanceUtils {
 				}
 			}
 
-			if (configFile != null && configFile.exists()) {
+			if (!ObjectUtils.isEmpty(configFile) && configFile.exists()) {
 				Properties properties = new Properties();
 				properties.load(new FileInputStream(configFile));
 				return properties.getProperty(OID);
@@ -109,7 +135,7 @@ public class ClientUtils extends ClientInstanceUtils {
 	}
 
 	public static void open(File directory) {
-		if (directory == null) {
+		if (ObjectUtils.isEmpty(directory)) {
 			return;
 		}
 
@@ -143,7 +169,7 @@ public class ClientUtils extends ClientInstanceUtils {
 		try {
 			ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFile));
 			ZipEntry entry = zipIn.getNextEntry();
-			while (entry != null) {
+			while (!ObjectUtils.isEmpty(entry)) {
 				String filePath = directory.getAbsolutePath() + File.separator + entry.getName();
 				if (!entry.isDirectory()) {
 					File file = new File(filePath);
@@ -163,29 +189,5 @@ public class ClientUtils extends ClientInstanceUtils {
 			zipFile.delete();
 		}
 		return new File(directory, zipFile.getName().replace(ZIP, ""));
-	}
-
-	public static class StartArguments {
-
-		public static final String CAD = "cad";
-		public static final String CAPP = "capp";
-		public static final String DOWNLOAD = "download";
-		private String type;
-
-		public StartArguments() {
-
-		}
-
-		public StartArguments(String type) {
-			this.type = type;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public void setType(String type) {
-			this.type = type;
-		}
 	}
 }

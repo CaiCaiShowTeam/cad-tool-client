@@ -24,48 +24,9 @@ import priv.lee.cad.ui.Option;
 import priv.lee.cad.ui.OptionPanel;
 import priv.lee.cad.ui.PromptTextField;
 import priv.lee.cad.util.ClientAssert;
+import priv.lee.cad.util.ObjectUtils;
 
 public class ContainerPanel extends AbstractPanel {
-
-	private static final long serialVersionUID = 1442969218942586007L;
-	private final String BUTTON_ICON = "folder.search.icon";
-	private final String EMPTY_FOLDER = "folder.empty.prompt";
-	private final String EMPTY_PDMLINKPRODUCT = "pdm.empty.prompt";
-	private final String FOLDER_PROMPT = "folder.prompt";
-	private final String FOLDER_TITLE = "folder.title";
-	private final Logger logger = Logger.getLogger(ContainerPanel.class);
-	private final String PDM_PROMPT = "pdm.prompt";
-	private final String PDM_TITLE = "pdm.title";
-	public PDMLinkProductPanel pdmlinkProductPanel;
-	private Preference preference = ClientUtils.temprary.getPreference();
-	public SubFolderPanel subFolderPanel;
-
-	private Container getDefaultContainer() {
-		return preference == null ? null : preference.getContainer();
-	}
-
-	@Override
-	public double getHorizontalProportion() {
-		return 1d;
-	}
-
-	@Override
-	public double getVerticalProportion() {
-		return 0.1d;
-	}
-
-	@Override
-	public void initialize() {
-		Container container = getDefaultContainer();
-
-		logger.info("initialize " + PDMLinkProductPanel.class + "...");
-		pdmlinkProductPanel = new PDMLinkProductPanel(container == null ? null : container.getProduct());
-		add(pdmlinkProductPanel);
-
-		logger.info("initialize " + SubFolderPanel.class + "...");
-		subFolderPanel = new SubFolderPanel(container == null ? null : container.getFolder());
-		add(subFolderPanel);
-	}
 
 	class PDMLinkProductPanel extends SimpleButtonSetPanel<SimplePdmLinkProduct> {
 
@@ -109,7 +70,7 @@ public class ContainerPanel extends AbstractPanel {
 
 		@Override
 		protected String setText(SimplePdmLinkProduct product) {
-			if (product == null) {
+			if (ObjectUtils.isEmpty(product)) {
 				return getResourceMap().getString(EMPTY_PDMLINKPRODUCT);
 			}
 			return product.getName();
@@ -224,7 +185,7 @@ public class ContainerPanel extends AbstractPanel {
 
 		@Override
 		protected String setText(SimpleFolder folder) {
-			if (folder == null) {
+			if (ObjectUtils.isEmpty(folder)) {
 				return getResourceMap().getString(EMPTY_FOLDER);
 			}
 			return folder.getName();
@@ -234,5 +195,48 @@ public class ContainerPanel extends AbstractPanel {
 		protected String setTitle() {
 			return getResourceMap().getString(FOLDER_TITLE);
 		}
+	}
+
+	private static final long serialVersionUID = 1442969218942586007L;
+	private final String BUTTON_ICON = "folder.search.icon";
+	private final String EMPTY_FOLDER = "folder.empty.prompt";
+	private final String EMPTY_PDMLINKPRODUCT = "pdm.empty.prompt";
+	private final String FOLDER_PROMPT = "folder.prompt";
+	private final String FOLDER_TITLE = "folder.title";
+	private final Logger logger = Logger.getLogger(ContainerPanel.class);
+	private final String PDM_PROMPT = "pdm.prompt";
+	private final String PDM_TITLE = "pdm.title";
+
+	public PDMLinkProductPanel pdmlinkProductPanel;
+
+	private Preference preference = ClientUtils.temprary.getPreference();
+
+	public SubFolderPanel subFolderPanel;
+
+	private Container getDefaultContainer() {
+		return ObjectUtils.isEmpty(preference) ? null : preference.getContainer();
+	}
+
+	@Override
+	public double getHorizontalProportion() {
+		return 1d;
+	}
+
+	@Override
+	public double getVerticalProportion() {
+		return 0.1d;
+	}
+
+	@Override
+	public void initialize() {
+		Container container = getDefaultContainer();
+
+		logger.info("initialize " + PDMLinkProductPanel.class + "...");
+		pdmlinkProductPanel = new PDMLinkProductPanel(ObjectUtils.isEmpty(container) ? null : container.getProduct());
+		add(pdmlinkProductPanel);
+
+		logger.info("initialize " + SubFolderPanel.class + "...");
+		subFolderPanel = new SubFolderPanel(ObjectUtils.isEmpty(container) ? null : container.getFolder());
+		add(subFolderPanel);
 	}
 }
