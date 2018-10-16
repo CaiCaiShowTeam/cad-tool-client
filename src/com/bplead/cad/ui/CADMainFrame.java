@@ -135,11 +135,8 @@ public class CADMainFrame extends AbstractFrame implements Callback {
 	private CAD cad;
 	private final String CAD_REPOSITORY = "cad.xml.repository";
 	protected ContainerPanel containerPanel;
-
 	protected DetailAttributePanel detailAttributePanel;
-
 	private final Logger logger = Logger.getLogger(CADMainFrame.class);
-
 	protected CustomStyleToolkit toolkit = new CustomStyleToolkit(this);
 
 	public CADMainFrame() {
