@@ -206,11 +206,8 @@ public class ContainerPanel extends AbstractPanel {
 	private final Logger logger = Logger.getLogger(ContainerPanel.class);
 	private final String PDM_PROMPT = "pdm.prompt";
 	private final String PDM_TITLE = "pdm.title";
-
 	public PDMLinkProductPanel pdmlinkProductPanel;
-
 	private Preference preference = ClientUtils.temprary.getPreference();
-
 	public SubFolderPanel subFolderPanel;
 
 	private Container getDefaultContainer() {

@@ -53,7 +53,6 @@ public class PdmLinkProductChooseDialog extends AbstractDialog implements Action
 	private static final long serialVersionUID = 39269794179304687L;
 	private PdmLinkProductTable table;
 	private double TABLE_HEIGTH_PROPORTION = 0.9d;
-
 	private double TABLE_WIDTH_PROPORTION = 0.98d;
 
 	public PdmLinkProductChooseDialog(Callback container) {

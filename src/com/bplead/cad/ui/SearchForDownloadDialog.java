@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
@@ -174,15 +175,40 @@ public class SearchForDownloadDialog extends AbstractDialog implements ActionLis
 	private static LayoutManager layout = new FlowLayout(FlowLayout.LEFT);
 	private static final Logger logger = Logger.getLogger(SearchForDownloadDialog.class);
 	private static final long serialVersionUID = 1336292047030719519L;
-
 	private DownloadSettingPanel downloadSettingPanel;
-
+	private final String PROMPT_SUCCESSED = "download.prompt.successed";
+	private final String PROMPT_TITLE = "download.prompt.title";
 	private SearchConditionsPanel searchConditionPanel;
-
 	private SearchResultPanel searchResultPanel;
 
 	public SearchForDownloadDialog(Callback container) {
 		super(SearchForDownloadDialog.class, container);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String localPath = downloadSettingPanel.setting.getText().getText();
+		ClientAssert.hasText(localPath, CustomPrompt.LOCAL_REPOSITORY_NULL);
+
+		List<SimpleDocument> documents = searchResultPanel.table.getSelectedDocuments();
+		ClientAssert.notEmpty(documents, CustomPrompt.SELECTED_ITEM_NULL);
+
+		DataContent content = ClientUtils.checkoutAndDownload(documents);
+		ClientAssert.notNull(content, CustomPrompt.FAILD_OPTION);
+
+		logger.info("download " + getClass() + "  completed...");
+		File localFile = new File(localPath + File.separator + content.getServerFile().getName());
+		download(content.getServerFile(), localFile);
+
+		logger.info("unzip file...");
+		File file = ClientUtils.unzip(localFile);
+
+		ClientUtils.open(file);
+
+		JOptionPane.showMessageDialog(null, getResourceMap().getString(PROMPT_SUCCESSED),
+				getResourceMap().getString(PROMPT_TITLE), JOptionPane.INFORMATION_MESSAGE);
+
+		System.exit(0);
 	}
 
 	private void download(File serverFile, File localFile) {
@@ -223,20 +249,6 @@ public class SearchForDownloadDialog extends AbstractDialog implements ActionLis
 
 	@Override
 	public Object setCallbackObject() {
-		String localPath = downloadSettingPanel.setting.getText().getText();
-		ClientAssert.hasText(localPath, CustomPrompt.LOCAL_REPOSITORY_NULL);
-
-		List<SimpleDocument> documents = searchResultPanel.table.getSelectedDocuments();
-		ClientAssert.notEmpty(documents, CustomPrompt.SELECTED_ITEM_NULL);
-
-		DataContent content = ClientUtils.checkoutAndDownload(documents);
-		ClientAssert.notNull(content, CustomPrompt.FAILD_OPTION);
-
-		logger.info("download " + getClass() + "  completed...");
-		File localFile = new File(localPath + File.separator + content.getServerFile().getName());
-		download(content.getServerFile(), localFile);
-
-		logger.info("unzip file...");
-		return ClientUtils.unzip(localFile);
+		return null;
 	}
 }

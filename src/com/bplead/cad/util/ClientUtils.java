@@ -5,13 +5,12 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.apache.log4j.Logger;
 
 import com.bplead.cad.bean.DataContent;
 import com.bplead.cad.bean.SimpleDocument;
@@ -24,6 +23,7 @@ import com.bplead.cad.bean.io.AttachmentModel;
 import com.bplead.cad.bean.io.Document;
 import com.bplead.cad.model.CustomPrompt;
 
+import priv.lee.cad.util.Assert;
 import priv.lee.cad.util.ClientAssert;
 import priv.lee.cad.util.ClientInstanceUtils;
 import priv.lee.cad.util.ObjectUtils;
@@ -31,6 +31,17 @@ import priv.lee.cad.util.PropertiesUtils;
 import priv.lee.cad.util.StringUtils;
 
 public class ClientUtils extends ClientInstanceUtils {
+
+	private static class ConfigFileFilter implements FilenameFilter {
+
+		@Override
+		public boolean accept(File file, String name) {
+			if (name.endsWith(configSuffix)) {
+				return true;
+			}
+			return false;
+		}
+	}
 
 	public static class StartArguments {
 
@@ -64,10 +75,8 @@ public class ClientUtils extends ClientInstanceUtils {
 	public static String cappPrimarySuffix = PropertiesUtils.readProperty(CAPP_PRIMARY_SUFFIX);
 	private static final String CONFIG_SUFFIX = "wt.document.config.file.suffix";
 	public static String configSuffix = PropertiesUtils.readProperty(CONFIG_SUFFIX);
-	private static final Logger logger = Logger.getLogger(ClientUtils.class);
 	private static final String OID = "oid";
 	public static Temporary temprary = new Temporary();
-
 	private static final String ZIP = ".zip";
 
 	public static List<Attachment> buildAttachments(AttachmentModel model, String primarySuffix) {
@@ -102,14 +111,36 @@ public class ClientUtils extends ClientInstanceUtils {
 		bos.close();
 	}
 
+	private static File findConfigFile(Attachment primary) {
+		if (primary == null) {
+			return null;
+		}
+
+		File directory = new File(primary.getAbsolutePath()).getParentFile();
+		if (directory.exists() && directory.isDirectory()) {
+			File[] files = directory.listFiles(new ConfigFileFilter());
+			Assert.isTrue(files.length == 0 || files.length == 1, "Required null or 1 config file only.");
+			return files.length == 0 ? null : files[0];
+		}
+		return null;
+	}
+
 	public static String getDocumentOid(String primarySuffix, List<Attachment> attachments) {
 		try {
 			File configFile = null;
+			Attachment primary = null;
+			// ~ find config file by primary attachment name
 			for (Attachment attachment : attachments) {
 				if (attachment.isPrimary()) {
-					configFile = new File(attachment.getAbsolutePath().replace(primarySuffix, configSuffix));
+					primary = attachment;
+					configFile = new File(attachment.getAbsolutePath() + configSuffix);
 					break;
 				}
+			}
+
+			// ~ list config file in primary directory
+			if (ObjectUtils.isEmpty(configFile) || !configFile.exists()) {
+				configFile = findConfigFile(primary);
 			}
 
 			if (!ObjectUtils.isEmpty(configFile) && configFile.exists()) {
@@ -139,19 +170,10 @@ public class ClientUtils extends ClientInstanceUtils {
 			return;
 		}
 
-		File[] files = directory.listFiles();
-		for (File file : files) {
-			if (file.isDirectory()) {
-				open(file);
-			} else {
-				if (file.getName().endsWith(cappPrimarySuffix) || file.getName().endsWith(cadPrimarySuffix)) {
-					try {
-						Desktop.getDesktop().open(file);
-					} catch (IOException e) {
-						logger.error("Failed to open file:" + file.getAbsolutePath());
-					}
-				}
-			}
+		try {
+			Desktop.getDesktop().open(directory);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

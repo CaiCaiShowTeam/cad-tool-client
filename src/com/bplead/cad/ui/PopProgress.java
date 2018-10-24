@@ -33,7 +33,6 @@ public class PopProgress extends AbstractDialog implements ActionListener {
 
 	private static final long serialVersionUID = 3270445558206143668L;
 	private JProgressBar progress = new JProgressBar(0, 100);
-
 	private JLabel prompt = new JLabel();
 
 	public PopProgress(Callback callback) {

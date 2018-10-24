@@ -98,6 +98,7 @@ public class CADMainFrame extends AbstractFrame implements Callback {
 			if (successed) {
 				JOptionPane.showMessageDialog(null, getResourceMap().getString(PROMPT_SUCCESSED),
 						getResourceMap().getString(PROMPT_TITLE), JOptionPane.INFORMATION_MESSAGE);
+				System.exit(0);
 			} else {
 				JOptionPane.showMessageDialog(null, getResourceMap().getString(PROMPT_FAILED),
 						getResourceMap().getString(PROMPT_TITLE), JOptionPane.OK_OPTION);
@@ -126,7 +127,7 @@ public class CADMainFrame extends AbstractFrame implements Callback {
 
 		@Override
 		public void call(Object object) {
-			ClientUtils.open((File) object);
+
 		}
 	}
 

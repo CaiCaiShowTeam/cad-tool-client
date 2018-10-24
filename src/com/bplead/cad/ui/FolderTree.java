@@ -34,7 +34,6 @@ public class FolderTree extends JTree {
 
 	private static final Logger logger = Logger.getLogger(FolderTree.class);
 	private static final long serialVersionUID = -8568945020359297230L;
-
 	private SimpleFolder rootFolder;
 
 	public FolderTree(SimplePdmLinkProduct product) {

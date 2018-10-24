@@ -99,6 +99,7 @@ public class CAPPMainFrame extends AbstractFrame implements Callback {
 			if (successed) {
 				JOptionPane.showMessageDialog(null, getResourceMap().getString(PROMPT_SUCCESSED),
 						getResourceMap().getString(PROMPT_TITLE), JOptionPane.INFORMATION_MESSAGE);
+				System.exit(0);
 			} else {
 				JOptionPane.showMessageDialog(null, getResourceMap().getString(PROMPT_FAILED),
 						getResourceMap().getString(PROMPT_TITLE), JOptionPane.OK_OPTION);
@@ -127,7 +128,7 @@ public class CAPPMainFrame extends AbstractFrame implements Callback {
 
 		@Override
 		public void call(Object object) {
-			ClientUtils.open((File) object);
+
 		}
 	}
 
@@ -136,11 +137,8 @@ public class CAPPMainFrame extends AbstractFrame implements Callback {
 	private BasicAttributePanel attributePanel;
 	private CAPP capp;
 	private final String CAPP_REPOSITORY = "capp.xml.repository";
-
 	private ContainerPanel containerPanel;
-
 	private TabAttributePanel tabAttributePanel;
-
 	private CustomStyleToolkit toolkit = new CustomStyleToolkit(this);
 
 	public CAPPMainFrame() {

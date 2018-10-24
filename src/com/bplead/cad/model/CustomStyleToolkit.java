@@ -35,7 +35,6 @@ public class CustomStyleToolkit extends DefaultStyleToolkit {
 	}
 
 	private static final String PREFERENCES_MENU_ITEM = "menu.file.item2";
-
 	private Callback callback;
 
 	public CustomStyleToolkit(Callback callback) {

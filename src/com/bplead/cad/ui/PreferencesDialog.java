@@ -212,11 +212,8 @@ public class PreferencesDialog extends AbstractDialog {
 	}
 
 	private static final long serialVersionUID = -2875157877197653599L;
-
 	private final Logger logger = Logger.getLogger(PreferencesDialog.class);
-
 	private Preference preference = ClientUtils.temprary.getPreference();
-
 	private PreferencesPanel preferencePanel;
 
 	public PreferencesDialog(Callback container) {
