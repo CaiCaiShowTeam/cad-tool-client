@@ -28,6 +28,7 @@ import priv.lee.cad.ui.OptionPanel;
 import priv.lee.cad.ui.PromptTextField;
 import priv.lee.cad.util.ClientAssert;
 import priv.lee.cad.util.ObjectUtils;
+import priv.lee.cad.util.PropertiesUtils;
 import priv.lee.cad.util.StringUtils;
 import priv.lee.cad.util.XmlUtils;
 
@@ -38,14 +39,6 @@ public class PreferencesDialog extends AbstractDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new LocalFileChooser(JFileChooser.DIRECTORIES_ONLY, preferencePanel.cache);
-		}
-	}
-
-	private class FindCaxaExeActionListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new LocalFileChooser(JFileChooser.FILES_ONLY, preferencePanel.exe);
 		}
 	}
 
@@ -98,13 +91,14 @@ public class PreferencesDialog extends AbstractDialog {
 
 	class PreferencesPanel extends AbstractPanel {
 
+		private static final String HOST_EDITABLE = "host.editable";
 		private static final long serialVersionUID = -5076567817803672184L;
 		public PromptTextField cache;
 		private final String CAXA_CACHE = "caxa.cache";
-		private final String CAXA_EXE = "caxa.exe";
+		private final String CAXA_CACHE_EDITABLE = "caxa.cache.editable";
+		private final String DEFAULT_CAXA_CACHE = "cad.caxa.cache";
 		private final String DEFAULT_FOLDER = "default.folder";
 		private final String DEFAULT_PDM = "default.pdm";
-		public PromptTextField exe;
 		public SimpleFolder folder;
 		public PromptTextField folderTextField;
 		private final double HEIGHT_PROPORTION = 0.08d;
@@ -118,13 +112,12 @@ public class PreferencesDialog extends AbstractDialog {
 		private final String WINDCHILL_URL = "wnc.url";
 
 		private String getCaxaCache() {
-			return (isPreferenceCaxaNull() || StringUtils.isEmpty(preference.getCaxa().getCache())) ? ""
+			return (isPreferenceCaxaNull() || StringUtils.isEmpty(preference.getCaxa().getCache())) ? getDefaultCaxaCach()
 					: preference.getCaxa().getCache();
 		}
 
-		private String getCaxaExe() {
-			return (isPreferenceCaxaNull() || StringUtils.isEmpty(preference.getCaxa().getLocation())) ? ""
-					: preference.getCaxa().getLocation();
+		private String getDefaultCaxaCach() {
+			return PropertiesUtils.readProperty(DEFAULT_CAXA_CACHE);
 		}
 
 		private String getDefaultFolder() {
@@ -165,19 +158,18 @@ public class PreferencesDialog extends AbstractDialog {
 			PromptTextField.PromptTextFieldDimension dimension = PromptTextField.newDimension(getPreferredSize(),
 					LABEL_PROPORTION, TEXT_PROPORTION, HEIGHT_PROPORTION);
 			url = PromptTextField.newInstance(getResourceMap().getString((WINDCHILL_URL)), getWnctUrl(), dimension);
+			url.setEditable(isHostEditable());
 			add(url);
 
-			exe = PromptTextField.newInstance(getResourceMap().getString((CAXA_EXE)), getCaxaExe(), dimension);
-			add(exe);
-			JButton openExe = new JButton(getResourceMap().getString((OPEN)));
-			openExe.addActionListener(new FindCaxaExeActionListener());
-			add(openExe);
-
+			boolean cacheEditable = isCacheEditable();
 			cache = PromptTextField.newInstance(getResourceMap().getString((CAXA_CACHE)), getCaxaCache(), dimension);
+			cache.setEditable(cacheEditable);
 			add(cache);
-			JButton openCache = new JButton(getResourceMap().getString((OPEN)));
-			openCache.addActionListener(new FindCaxaCacheActionListener());
-			add(openCache);
+			if (cacheEditable) {
+				JButton openCache = new JButton(getResourceMap().getString((OPEN)));
+				openCache.addActionListener(new FindCaxaCacheActionListener());
+				add(openCache);
+			}
 
 			productTextField = PromptTextField.newInstance(getResourceMap().getString((DEFAULT_PDM)), getDefaultPdm(),
 					dimension);
@@ -192,6 +184,14 @@ public class PreferencesDialog extends AbstractDialog {
 			JButton openFolder = new JButton(getResourceMap().getString((OPEN)));
 			openFolder.addActionListener(new FindDefaultFolderActionListenner());
 			add(openFolder);
+		}
+
+		private boolean isCacheEditable() {
+			return Boolean.parseBoolean(getResourceMap().getString(CAXA_CACHE_EDITABLE));
+		}
+
+		private boolean isHostEditable() {
+			return Boolean.parseBoolean(PropertiesUtils.readProperty(HOST_EDITABLE));
 		}
 
 		private boolean isPreferenceCaxaNull() {
@@ -233,9 +233,6 @@ public class PreferencesDialog extends AbstractDialog {
 		String caxaCache = preferencePanel.cache.getText().getText();
 		ValidateUtils.validateCaxaCache(caxaCache);
 
-		String caxaExe = preferencePanel.exe.getText().getText();
-		ValidateUtils.validateCaxaExe(caxaExe);
-
 		SimplePdmLinkProduct product = preferencePanel.product;
 		ValidateUtils.validateProduct(product);
 
@@ -243,7 +240,7 @@ public class PreferencesDialog extends AbstractDialog {
 		ValidateUtils.validateFolder(folder);
 
 		logger.info("begin to write client temporay...");
-		preference.setCaxa(new CaxaTemporary(caxaCache, caxaExe));
+		preference.setCaxa(new CaxaTemporary(caxaCache));
 		preference.setContainer(new Container(product, folder));
 
 		XmlUtils.store(ClientUtils.temprary);

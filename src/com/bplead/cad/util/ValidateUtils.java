@@ -32,12 +32,6 @@ public class ValidateUtils {
 		ClientAssert.isTrue(new File(caxaCache).isDirectory(), CustomPrompt.ERROR_PREFERENCE_CAXA_CACHE);
 	}
 
-	public static void validateCaxaExe(String caxaExe) {
-		ClientAssert.hasText(caxaExe, CustomPrompt.PREFERENCE_CAXA_EXE_NULL);
-		ClientAssert.isTrue(new File(caxaExe).exists(), CustomPrompt.ERROR_PREFERENCE_CAXA_EXE);
-
-	}
-
 	public static void validateCheckin(Document document) {
 		ClientAssert.notNull(document, "Document is required");
 
@@ -98,8 +92,6 @@ public class ValidateUtils {
 		ClientAssert.notNull(preference.getCaxa(), CustomPrompt.PREFERENCE_CAXA_NULL);
 
 		validateCaxaCache(preference.getCaxa().getCache());
-
-		validateCaxaExe(preference.getCaxa().getLocation());
 
 		logger.info("Validate preference complete...");
 	}
